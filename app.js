@@ -7,14 +7,12 @@ const mongoose = require('mongoose');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const movieRouter = require('./routes/movie');
-const bookingRouter = require('./routes/booking');
-const copyRouter = require('./routes/copy');
-const awaitListRouter = require('./routes/awaitList');
+const moviesRouter = require('./routes/movies');
+const bookingRouter = require('./routes/bookings');
+const copyRouter = require('./routes/copies');
 const actorsRouter = require('./routes/actors');
 const directorsRouter = require('./routes/directors');
 const membersRouter = require('./routes/members');
-const adressRouter = require('./routes/adress');
 
 // mongodb:://<dbUser>?:<dbPass>?@<direction>:<port>/<dbName>
 const uri = "mongodb://localhost:27017/video-club-app";
@@ -44,14 +42,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/movie', movieRouter);
+app.use('/movies', moviesRouter);
 app.use('/booking',bookingRouter);
 app.use('/copy',copyRouter);
-app.use('/awaitList',awaitListRouter);
 app.use('/actors',actorsRouter);
 app.use('/directors',directorsRouter);
 app.use('/members',membersRouter);
-app.use('/adress',adressRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

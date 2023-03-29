@@ -1,16 +1,41 @@
 const express = require('express');
+const Director = require('../models/director');
+const Movie = require('../models/movie');
 
 function list(req, res, next) {
-    res.send('respond with a actor list');
+    Movie.find().populate("_director").then(objs => res.status(200).json({
+        message: "listado de peliculas",
+        obj: objs
+    })).catch(ex => res.status(500).json({
+        message: "error al listar peliculas",
+        obj: ex
+    }));
 }
 
 function index(req, res, next) {
     res.send(`respond with a index of a actor= ${req.params.id}`);
 }
 
-function create(req, res, next) {
-    let title = req.body.title;
-    res.send(`respond with a create title actor =${title}`);
+ async function create(req, res, next) {
+    const title = req.body.title;
+    const directorId =  req.body.directorId;
+
+    let director = await Director.findOne({"_id": directorId});
+
+    let movie = new Movie({
+        title: title,
+        director: director
+    });
+
+    movie.save().then(obj => res.status(200).json({
+        message: 'pelicula creada correctamente',
+        obj: obj
+    })).catch(ex => res.status(500).json({
+        message: 'no se pudo crear la pelicula',
+        obj: ex
+    }));
+ 
+
 }
 
 function replace(req, res, next) {
