@@ -1,35 +1,52 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 
-function list(req, res, next) {
-    res.send('respond with a actor list');
+
+
+function home(req, res, next) {
+    res.render('index', { title: 'Express' });
 }
 
-function index(req, res, next) {
-    res.send(`respond with a index of a actor= ${req.params.id}`);
-}
+function login(req, res, next) {
+    const email = req.body.email;
+    const password = req.body.password;
+    const jwtKey = "4e0214edc70d400e41d26702d7a3ea02";
 
-function create(req, res, next) {
-    let title = req.body.title;
-    res.send(`respond with a create title actor =${title}`);
-}
+    User.findOne({"_email":email}).select('_password _salt').then(user => {
+        if(user){
+            bcrypt.hash(password, user.salt, (err, hash) => {
+                if(err){
+                    res.status(403).json({
+                        message: 'usuario y/o contrasena incorrecto',
+                        obj: err
+                    });
+                 }
 
-function replace(req, res, next) {
-    res.send(`respond with a replace actor= ${req.params.id}`);
-}
+                if(hash === user.password){
+                    res.status(200).json({
+                        message: 'login ok',
+                        obj: jwt.sign({data: user.id, exp: Math.floor(Date.now()/1000)+60}, jwtKey)
+                    });
+                    }else{
+                    res.status(403).json({
+                        message: 'usuario y/o contrasena incorrecto',
+                        obj: null
+                    });
+                }
 
-function update(req, res, next) {
-    res.send(`respond with a update actor = ${req.params.id}`);
-}
+            });
 
-function destroy(req, res, next) {
-    res.send(`respond with a destory actor= ${req.params.id}`);
-}
-
-module.exports = { 
-    list,
-    index,
-    create,
-    replace,
-    update,
-    destroy
+        }else{
+            res.status(403).json({
+                message: 'usuario y/o contrasena incorrecto',
+                obj: null
+            });
+        }
+     });
 };
+
+module.exports = {
+    home, login
+}
