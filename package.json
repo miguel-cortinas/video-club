@@ -3,17 +3,21 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "dev": "supervisor ./bin/www"
+    "start": "set NODE_ENV=production; node ./bin/www",
+    "dev": "supervisor ./bin/www",
+    "test":"jest"
   },
   "dependencies": {
+    "accesscontrol": "^2.2.1",
     "acl": "^0.4.11",
     "bcrypt": "^5.1.0",
+    "config": "^3.3.9",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "express-jwt": "^8.4.1",
     "http-errors": "~1.6.3",
+    "i18n": "^0.15.1",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.3",
     "morgan": "~1.9.1",
@@ -21,5 +25,9 @@
     "pug": "2.0.0-beta11",
     "sequelize": "^6.29.0",
     "supervisor": "^0.12.0"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "supertest": "^6.3.3"
   }
 }

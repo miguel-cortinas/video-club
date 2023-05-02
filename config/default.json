@@ -1,0 +1,6 @@
+{
+    "secret":{
+        "key":"2840e8222fa4a4119b2e2cb73b5c3fdc"
+    },
+    "dbChain":"mongodb://localhost:27017/video-club-app"
+}
