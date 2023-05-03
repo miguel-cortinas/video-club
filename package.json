@@ -5,7 +5,7 @@
   "scripts": {
     "start": "set NODE_ENV=production; node ./bin/www",
     "dev": "supervisor ./bin/www",
-    "test":"jest"
+    "test": "jest"
   },
   "dependencies": {
     "accesscontrol": "^2.2.1",
