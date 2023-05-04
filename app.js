@@ -53,8 +53,8 @@ app.use(i18n.init);
 
 const jwtKey = config.get("secret.key");
 
-app.use(expressjwt({secret:jwtKey, algorithms:['HS256']})
-   .unless({path:["/login"]}));
+//app.use(expressjwt({secret:jwtKey, algorithms:['HS256']})
+  // .unless({path:["/login"]}));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/movies', moviesRouter);
