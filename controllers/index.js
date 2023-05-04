@@ -45,8 +45,11 @@ function login(req, res, next) {
                 obj: null
             });
         }
-     });
-};
+     }).catch(ex => res.status(403).json({
+        message: res.__('bad.login'),
+        obj: ex
+        }));
+}
 
 module.exports = {
     home, login

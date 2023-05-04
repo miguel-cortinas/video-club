@@ -1,44 +1,89 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
+const async = require('async');
+
 const User = require('../models/user');
-function list(req, res, next) {
-    User.find().then(objs => res.status(200).json({
-        message: "Lista de usuarios",
-        obj: objs
-    })).catch(ex => res.status(500).json({
-        message: "No se pudo consultar la informacion",
-        obj: ex
-    }));
+const adminAbility = require('../models/adminAbility')
+const userAblility = require('../models/userAbility');
+const Profile = require('../models/profile');
+const Permission = require('../models/permission');
+
+var map = {}
+map['admin'] = adminAbility;
+map['user'] = userAblility;
+
+async function list(req, res, next) {
+    let id = req.body.id;
+    let user = await User.findOne({"_id":id});
+    let profileName;
+    var query;
+
+    user = JSON.parse(JSON.stringify(user));
+    user._profiles.forEach(async(profileId) => {
+        profileName = await Profile.findOne({"_id":profileId});
+        profileName = JSON.parse(JSON.stringify(profileName))._description;
+        try {
+            query = await User.accessibleBy(map[profileName], 'read').populate({
+                path: '_profiles',
+                populate: { path: '_permissions' }
+            });
+            res.status(200).json({
+                message: res.__('ok.users'),
+                obj: query
+            });
+          } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                message: 'ERROR',
+                obj: error
+            });
+          }
+    });
 }
 
 function index(req, res, next) {
     const id = req.params.id;
-    User.findOne({"_id":id}).then(obj => res.status(200).json({
-        message: `User con id ${id}`, // Interpolacion
-        obj: obj
-    })).catch(ex => res.status(500).json({
-        message: "No se pudo consultar la informacion",
-        obj:ex
-    }));
+    User.findOne({"_id":id}).then(
+        obj=>res.status(200).json({
+            message: `User almacenado con Id ${id}`,
+            obj: obj
+        })
+    ).catch(
+        ex=>res.status(500).json({
+            message: 'No se pudo consultar la informacion de los usuarios',
+            obj: ex
+        })
+    );
 }
 
-function create(req, res, next) {
+async function create(req, res, next) {
     let name = req.body.name;
     let lastName = req.body.lastName;
+    let email = req.body.email;
+    let password = req.body.password;
     let phone = req.body.phone;
 
+    //Generar el salt con las iteraciones para generar la cadena
+    const salt = await bcrypt.genSalt(10);
+
+    const passwordHash = await bcrypt.hash(password, salt);
+
     let user = new User({
-        name:name,
-        lastName:lastName,
-        phone:phone
+        name: name,
+        lastName: lastName,
+        email: email,
+        password: passwordHash,
+        phone: phone,
+        salt: salt
     });
 
     user.save().then(obj => res.status(200).json({
-        message:"User creado correctamente.",
-        obj:obj
-    })).catch(ex => res.status(500).json({
-        message: "User no se pudo crear.",
-        ex:ex
-    }));
+        message: "Usuario creado correctamente",
+        obj: obj
+        })).catch(ex => res.status(500).json({
+            message: "No se pudo almacenar el usuario",
+            obj: ex
+        }));
 }
 
 function replace(req, res, next) {
@@ -46,61 +91,72 @@ function replace(req, res, next) {
     let name = req.body.name ? req.body.name : "";
     let lastName = req.body.lastName ? req.body.lastName : "";
     let phone = req.body.phone ? req.body.phone : "";
+    let email = req.body.email ? req.body.email : "";
+    let password = req.body.password ? req.body.password : "";
 
-    let User = new Object({
+    let user = new Object({
         _name: name,
         _lastName: lastName,
-        _phone: phone
+        _phone: phone,
+        _email: email,
+        _password: password
     });
-    //User.findOneAndUpdate({},director,{}).then().catch();
-    User.findOneAndUpdate({"_id":id},User,{new : true})
-            .then(obj => res.status(200).json({
-                message: "User actualizado correctamente",
-                obj: obj
-            })).catch(ex => res.status(500).json({
-                message: "No se pudo actualizar la informacion",
-                obj:ex
-            }));
+
+    User.findOneAndUpdate({"_id":id}, user, {new: true})
+        .then(obj => res.status(200).json({
+            message: "Usuario actualizado correctamente",
+            obj: obj
+        })).catch(ex => res.status(500).json({
+            message: "No se pudo reemplazar el usuario",
+            obj: ex
+        }));
 }
 
 function update(req, res, next) {
     const id = req.params.id;
     let name = req.body.name;
     let lastName = req.body.lastName;
+    let email = req.body.email;
+    let password = req.body.password;
     let phone = req.body.phone;
 
-    let User = new Object(); // Para poder llenar los atributos y hacer los cambios
+    let user = new Object();
 
-    if(name){
-        User._name = name;
-    }
-    if(lastName){
-        User._lastName = lastName;
-    }
-    if(phone){
-        User._phone = phone;
-    }
+    if(name)
+        user._name = name;
 
-    User.findOneAndUpdate({"_id":id},User)
-            .then(obj => res.status(200).json({
-                message:"User actualizado correctamente.",
-                obj:obj
-            })).catch(ex => res.status(500).json({
-                message: "No se pudo actualizar la User",
-                obj:ex
-            }));
+    if(lastName)
+        user._lastName = lastName;
+
+    if(phone)
+        user._phone = phone;
+
+    if(email)
+        user._email = email;
+    
+    if(password)
+        user._password = password;
+    
+    
+    User.findOneAndUpdate({"_id":id}, user, {new: true})
+    .then(obj => res.status(200).json({
+        message: "Usuario actualizado correctamente",
+        obj: obj
+    })).catch(ex => res.status(500).json({
+        message: "No se pudo reemplazar el usuario",
+        obj: ex
+    }));
 }
 
 function destroy(req, res, next) {
-    const id = req.params.id;
-    User.findByIdAndRemove({"_id":id})
-            .then(obj => res.status(200).json({
-                message: "User eliminado correctamente",
-                obj:obj
-            })).catch(ex => res.status(500).json({
-                message: "No se pudo eliminar la User",
-                obj:ex
-            }));
+    const id = req. params.id;
+    User.findByIdAndRemove({"_id":id}).then(obj => res.status(200).json({
+        message: "Usuario eliminado correctamente",
+        obj: obj
+    })).catch(ex => res.status(500).json({
+        message: "No se pudo eliminar al usuario",
+        obj: ex
+    }))
 }
 
 module.exports = { 
@@ -109,5 +165,5 @@ module.exports = {
     create,
     replace,
     update,
-    destroy
+    destroy
 };
