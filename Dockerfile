@@ -1,6 +1,6 @@
 FROM node
-LABEL Miguel Cortinas
-ENV HOME /root
-COPY ./app.js ./app.js
-CMD node app.js
-EXPOSE 27017
+WORKDIR /APP
+COPY . .
+RUN npm install
+EXPOSE 3000
+CMD npm start
