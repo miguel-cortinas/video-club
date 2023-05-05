@@ -21,7 +21,7 @@ describe('Probar el inicio de sesion', ()=>{
 
 describe('Probar las rutas de los copies', ()=>{
     it('Deberia de crear una copia', (done)=>{
-        supertest(app).post('/copies')
+        supertest(app).post('/copy')
         .send({movie:'619c697825619b58c91223b6', format:'vhs', number:'123', status:'true'})
         .set('Authorization', `Bearer ${key}`)
         .end(function(err, res){
@@ -35,7 +35,7 @@ describe('Probar las rutas de los copies', ()=>{
         })
     })
     it('deberia de obtener la lista de copias', (done)=>{
-        supertest(app).get('/copies')
+        supertest(app).get('/copy')
         .set('Authorization', `Bearer ${key}`)
         .end(function(err, res){
             if(err){
@@ -47,7 +47,7 @@ describe('Probar las rutas de los copies', ()=>{
         })
     })
     it('deberia de encontrar una copia', (done)=>{
-        supertest(app).get(`/copies/${id}`)
+        supertest(app).get(`/copy/${id}`)
         .set('Authorization', `Bearer ${key}`)
         .end(function(err, res){
             if(err){
@@ -59,7 +59,7 @@ describe('Probar las rutas de los copies', ()=>{
         })
     })
     it('deberia de editar una copia', (done)=>{
-        supertest(app).patch(`/copies/${id}`)
+        supertest(app).patch(`/copy/${id}`)
         .send({movie:'619c697825619b58c91223b6', format:'vhs', number:'123', status:'true'})
         .set('Authorization', `Bearer ${key}`)
         .end(function(err, res){
@@ -72,7 +72,7 @@ describe('Probar las rutas de los copies', ()=>{
         })
     })
     it('deberia de reemplazar un copia', (done)=>{
-        supertest(app).put(`/copies/${id}`)
+        supertest(app).put(`/copy/${id}`)
         .send({movie:'619c697825619b58c91223b6', format:'vhs', number:'123', status:'true'})
         .set('Authorization', `Bearer ${key}`)
         .end(function(err, res){
@@ -85,7 +85,7 @@ describe('Probar las rutas de los copies', ()=>{
         })
     })
     it('eliminar una copia', (done)=>{
-        supertest(app).delete(`/copies/${id}`)
+        supertest(app).delete(`/copy/${id}`)
         .set('Authorization', `Bearer ${key}`)
         .end(function(err, res){
             if(err){

@@ -3,7 +3,6 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const { accesibleRecordsPlugin } = require('@casl/mongoose');
 const mongoose = require('mongoose');
 const config = require('config');
 const i18n = require('i18n');
@@ -20,7 +19,7 @@ const actorsRouter = require('./routes/actors');
 const permisionsRouter = require('./routes/permisions');
 const directorsRouter = require('./routes/directors');
 const membersRouter = require('./routes/members');
-const addressRouter = require('./routes/address');
+const genresRouter = require('./routes/genres');
 
 
 // mongodb:://<dbUser>?:<dbPass>?@<direction>:<port>/<dbName>
@@ -69,7 +68,7 @@ app.use('./permisions', permisionsRouter);
 app.use('/actors',actorsRouter);
 app.use('/directors',directorsRouter);
 app.use('/members',membersRouter);
-app.use('/address',addressRouter);
+app.use('/genres',genresRouter);
 
 
 // catch 404 and forward to error handler

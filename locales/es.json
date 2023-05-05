@@ -1,4 +1,22 @@
 {
     "ok.login":"Sesion iniciada correctamente",
-    "bad.login":"usuario y/o contrasena incorrecto"
+    "bad.login":"Usuario y/o contraseña incorectos",
+    "ok.genre":"Respuesta genero",
+    "bad.genre":"Sin respuesta genero",
+    "ok.member":"Respuesta miembro",
+    "bad.member":"Sin respuesta miembro",
+    "ok.movie":"Respuesta pelicula",
+    "bad.movie":"Sin respuesta pelicula",
+    "ok.permision":"Respuesta permiso",
+    "bad.permision":"Sin respuesta permiso",
+    "ok.user":"Respuesta usuario",
+    "bad.user":"Sin respuesta usuario",
+    "ok.director":"Respuesta director",
+    "bad.director":"Sin respuesta director",
+    "ok.copy":"Respuesta copia",
+    "bad.copy":"Sin respuesta copia",
+    "ok.booking":"Respuesta reservacion",
+    "bad.booking":"Sin respuesta reservacion",
+    "ok.actor":"Respuesta actor",
+    "bad.actor":"Sin respuesta actor"
 }

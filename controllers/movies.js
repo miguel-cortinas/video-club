@@ -5,16 +5,23 @@ const Movie = require('../models/movie');
 
 function list(req, res, next) {
     Movie.find().populate("_director").then(objs => res.status(200).json({
-        message: "Listado de peliculas",
+        message: res.__('ok.movie'),
         obj:objs
     })).catch(ex => res.status(500).json({
-        message: "No se puso listar las peliculas",
+        message: res.__('bad.movie'),
         obj:ex
     }));
 }
 
 function index(req, res, next) {
-    res.send(`respond with a index of a movie= ${req.params.id}`);
+    const id = req.params.id;
+    Movie.findOne({"_id":id}).then(obj => res.status(200).json({
+        message: res.__('ok.movie'),
+        obj: obj
+    })).catch(ex => res.status(500).json({
+        message: res.__('bad.movie'),
+        obj:ex
+    }));
 }
 
 async function create(req, res, next) {
@@ -22,6 +29,7 @@ async function create(req, res, next) {
     const directorId = req.body.directorId;
 
     let director = await Director.findOne({"_id":directorId});
+    
     let movie = new Movie({
         title:title,
         director:director
@@ -29,44 +37,66 @@ async function create(req, res, next) {
 
     movie.save()
          .then(obj => res.status(200).json({
-            message: "Pelicula creada correctamente",
+            message: res.__('ok.movie'),
             obj:obj
          }))
          .catch(ex => res.status(500).json({
-            message: "No se creo la pelicula",
+            message: res.__('bad.movie'),
             obj:ex
          }));
 
 }
 
 function replace(req, res, next) {
-    const id = req.params.id;
-    let name = req.body.name ? req.body.name : "";
-    let lastName = req.body.lastName ? req.body.lastName : "";
-    let phone = req.body.phone ? req.body.phone : "";
+    const directorId = req.body.directorId ? req.body.directorId : "";
+    let title = req.body.title ? req.body.title : "";
 
-    let User = new Object({
-        _name: name,
-        _lastName: lastName,
-        _phone: phone
+    let Movie = new Object({
+        _title: title,
+        _directorId: directorId
     });
-    //User.findOneAndUpdate({},director,{}).then().catch();
-    User.findOneAndUpdate({"_id":id},User,{new : true})
+  
+    Movie.findOneAndUpdate({"_id":id},Movie,{new : true})
             .then(obj => res.status(200).json({
-                message: "User actualizado correctamente",
+                message: res.__('ok.movie'),
                 obj: obj
             })).catch(ex => res.status(500).json({
-                message: "No se pudo actualizar la informacion",
+                message: res.__('bad.movie'),
                 obj:ex
             }));
 }
 
 function update(req, res, next) {
-    res.send(`respond with a update movie = ${req.params.id}`);
+    const directorId = req.params.directorId;
+    let title = req.body.title;
+
+    let Movie = new Object(); 
+
+    if(description){
+        Movie._title = title;
+        Movie._directorId = directorId;
+    }
+
+    Permision.findOneAndUpdate({"_id":id},Permision)
+            .then(obj => res.status(200).json({
+                message: res.__('ok.permision'),
+                obj:obj
+            })).catch(ex => res.status(500).json({
+                message: res.__('bad.permision'),
+                obj:ex
+            }));
 }
 
 function destroy(req, res, next) {
-    res.send(`respond with a destory movie= ${req.params.id}`);
+    const id = req.params.id;
+    Movie.findByIdAndRemove({"_id":id})
+            .then(obj => res.status(200).json({
+                message: res.__('ok.permision'),
+                obj:obj
+            })).catch(ex => res.status(500).json({
+                message: res.__('bad.permision'),
+                obj:ex
+            }));
 }
 
 module.exports = { 

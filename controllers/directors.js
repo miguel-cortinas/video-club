@@ -2,10 +2,10 @@ const express = require('express');
 const Director = require('../models/director');
 function list(req, res, next) {
     Director.find().then(objs => res.status(200).json({
-        message: "Lista de directores",
+        message: res.__('ok.director'),
         obj: objs
     })).catch(ex => res.status(500).json({
-        message: "No se pudo consultar la informacion",
+        message: res.__('bad.director'),
         obj: ex
     }));
 }
@@ -13,10 +13,10 @@ function list(req, res, next) {
 function index(req, res, next) {
     const id = req.params.id;
     Director.findOne({"_id":id}).then(obj => res.status(200).json({
-        message: `Director con id ${id}`, // Interpolacion
+        message: res.__('ok.director'),
         obj: obj
     })).catch(ex => res.status(500).json({
-        message: "No se pudo consultar la informacion",
+        message: res.__('bad.director'),
         obj:ex
     }));
 }
@@ -30,10 +30,10 @@ function create(req, res, next) {
     });
 
     director.save().then(obj => res.status(200).json({
-        message:"Director creado correctamente.",
+        message:res.__('ok.director'),
         obj:obj
     })).catch(ex => res.status(500).json({
-        message: "Director no se pudo crear.",
+        message: res.__('bad.director'),
         ex:ex
     }));
 }
@@ -47,13 +47,13 @@ function replace(req, res, next) {
         _name: name,
         _lastName: lastName
     });
-    //Director.findOneAndUpdate({},director,{}).then().catch();
+    
     Director.findOneAndUpdate({"_id":id},director,{new : true})
             .then(obj => res.status(200).json({
-                message: "Director actualizado correctamente",
+                message: res.__('ok.director'),
                 obj: obj
             })).catch(ex => res.status(500).json({
-                message: "No se pudo actualizar la informacion",
+                message: res.__('bad.director'),
                 obj:ex
             }));
 }
@@ -63,7 +63,7 @@ function update(req, res, next) {
     let name = req.body.name;
     let lastName = req.body.lastName;
 
-    let director = new Object(); // Para poder llenar los atributos y hacer los cambios
+    let director = new Object(); 
 
     if(name){
         director._name = name;
@@ -75,10 +75,10 @@ function update(req, res, next) {
 
     Director.findOneAndUpdate({"_id":id},director)
             .then(obj => res.status(200).json({
-                message:"Director actualizado correctamente.",
+                message: res.__('ok.director'),
                 obj:obj
             })).catch(ex => res.status(500).json({
-                message: "No se pudo actualizar el director",
+                message: res.__('bad.director'),
                 obj:ex
             }));
 }
@@ -87,10 +87,10 @@ function destroy(req, res, next) {
     const id = req.params.id;
     Director.findByIdAndRemove({"_id":id})
             .then(obj => res.status(200).json({
-                message: "Director eliminado correctamente",
+                message: res.__('ok.director'),
                 obj:obj
             })).catch(ex => res.status(500).json({
-                message: "No se pudo eliminar el director",
+                message: res.__('bad.director'),
                 obj:ex
             }));
 }

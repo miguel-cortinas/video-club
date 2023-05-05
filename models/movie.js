@@ -4,14 +4,14 @@ const schema = mongoose.Schema({
     _title: String,
     _director: {
         type: mongoose.Schema.ObjectId,
-        ref: 'Director'
+        ref:'Director'
     }
 });
 
 class Movie {
-    constructor(title, director) {
-    this._title = title;
-    this._director = director;
+    constructor(title, director){
+        this._title = title;
+        this._director = director;
     }
 
     get title(){
@@ -27,10 +27,8 @@ class Movie {
     }
 
     set director(v){
-        this._director= v;
+        this._director = v;
     }
-
-    
 }
 
 schema.loadClass(Movie);

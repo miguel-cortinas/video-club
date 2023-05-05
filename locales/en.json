@@ -1,4 +1,24 @@
 {
-    "ok.login":"login success",
-    "bad.login":"Incorrect username and/or password"
+    "ok.login":"Login success",
+    "bad.login":"User or password are wrong.",
+    "ok.genre":"Genre response",
+    "bad.genre":"Genre without response",
+    "ok.member":"Member response",
+    "bad.member":"Member without response",
+    "ok.movie":"Movie response",
+    "bad.movie":"Movie without response",
+    "ok.permision":"Permission response",
+    "bad.permision":"Permission without response",
+    "ok.user":"User response",
+    "bad.user":"User without response",
+    "ok.director":"Director response",
+    "bad.director":"Director without response",
+    "ok.copy":"Copy response",
+    "bad.copy":"Copy without response",
+    "ok.booking":"Booking response",
+    "bad.booking":"Booking without response",
+    "ok.actor":"Actor response",
+    "bad.actor":"Actor not response"
+    
+
 }
