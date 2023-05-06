@@ -1,6 +1,5 @@
 FROM node
-ENV HOME /root
-COPY ./app.js ./app.js
+WORKDIR /app
+COPY ./app
 RUN npm install
-EXPOSE 3000
-CMD npm start
+CMD ["npm", "start"]
