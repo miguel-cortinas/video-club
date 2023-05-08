@@ -1,6 +1,5 @@
 FROM node
-WORKDIR /APP
-COPY . .
-RUN npm install
-EXPOSE 3000
-CMD npm start
+MAINTAINER miguel cortinas
+ENV HOME /root
+COPY ./app.js ./app.js
+CMD node app.js
